@@ -1,4 +1,4 @@
-# THE HARNESS — Prototypes
+# THE HARNESS — Prototypes v1
 
 Working HTML/CSS/JS prototypes for **THE HARNESS**, an agent-orchestration platform.
 No build step, no dependencies — open any `index.html` in a browser and it runs.
