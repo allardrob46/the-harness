@@ -67,6 +67,7 @@ let gameState = {
   bets: [],
   folded: [],
   hasActed: [], // track who has acted in the current betting round
+  eliminated: new Array(players.length).fill(false), // broke players are out of the tournament
   round: 0,
 };
 
@@ -146,9 +147,13 @@ function renderPlayers() {
     // Active player highlight
     seat.classList.toggle('active', i === gameState.currentPlayerIndex && gameState.phase !== 'idle' && gameState.phase !== 'showdown');
     seat.classList.toggle('folded', gameState.folded[i]);
+    seat.classList.toggle('eliminated', !!gameState.eliminated[i]);
 
     // Action label
-    if (gameState.folded[i]) {
+    if (gameState.eliminated[i]) {
+      action.textContent = 'OUT';
+      action.className = 'seat-action visible out';
+    } else if (gameState.folded[i]) {
       action.textContent = 'Fold';
       action.className = 'seat-action visible fold';
     } else {
@@ -293,6 +298,27 @@ function updateActionBar() {
 // ─── Game Logic ───
 function startNewHand() {
   gameState.round++;
+
+  // Time out anyone who's broke — they're out of the tournament
+  players.forEach((p, i) => { if (p.chips <= 0) gameState.eliminated[i] = true; });
+  const inGame = players.map((_, i) => i).filter(i => !gameState.eliminated[i]);
+  if (inGame.length <= 1) {
+    gameState.phase = 'idle';
+    renderAll();
+    hideActionBar('Tournament over');
+    if (inGame.length === 1) {
+      const w = players[inGame[0]];
+      addChatMessage('🏆', 'System', inGame[0] === 0 ? 'You win the tournament! 🏆' : `${w.name} wins the tournament!`, true);
+      showToast(`🏆 ${inGame[0] === 0 ? 'You win' : w.name + ' wins'} the tournament!`);
+    } else {
+      addChatMessage('🏆', 'System', 'Tournament over — no players left.', true);
+    }
+    return;
+  }
+  if (gameState.eliminated[0]) {
+    addChatMessage('⚙️', 'System', 'You are out of chips — spectating the rest of the tournament.', true);
+  }
+
   gameState.deck = buildDeck();
   gameState.communityCards = [];
   gameState.pot = 0;
@@ -301,30 +327,39 @@ function startNewHand() {
   gameState.bets = new Array(players.length).fill(0);
   gameState.folded = new Array(players.length).fill(false);
   gameState.hasActed = new Array(players.length).fill(false);
-  gameState.playersInHand = players.map((_, i) => i);
+  gameState.playersInHand = inGame;
 
-  // Rotate dealer (set to 7 on first hand so human acts early)
+  // Rotate dealer (set to 6 on first hand so human acts early), skipping eliminated seats
   if (gameState.round === 1) {
     gameState.dealerIndex = 6;
   } else {
-    gameState.dealerIndex = (gameState.dealerIndex + 1) % players.length;
+    let d = gameState.dealerIndex;
+    let guard = 0;
+    do { d = (d + 1) % players.length; guard++; } while (gameState.eliminated[d] && guard <= players.length);
+    gameState.dealerIndex = d;
   }
 
-  // Deal hole cards
-  players.forEach(p => {
-    p.holeCards = [gameState.deck.pop(), gameState.deck.pop()];
+  // Deal hole cards (only to players still in the tournament)
+  players.forEach((p, i) => {
+    p.holeCards = gameState.eliminated[i] ? null : [gameState.deck.pop(), gameState.deck.pop()];
   });
 
-  // Post blinds
-  const sbIndex = (gameState.dealerIndex + 1) % players.length;
-  const bbIndex = (gameState.dealerIndex + 2) % players.length;
+  // Post blinds — skip eliminated seats, cap at what the player actually has
+  let sbIndex = gameState.dealerIndex;
+  let guard = 0;
+  do { sbIndex = (sbIndex + 1) % players.length; guard++; } while (gameState.eliminated[sbIndex] && guard <= players.length);
+  let bbIndex = sbIndex;
+  guard = 0;
+  do { bbIndex = (bbIndex + 1) % players.length; guard++; } while (gameState.eliminated[bbIndex] && guard <= players.length);
 
-  players[sbIndex].chips -= gameState.smallBlind;
-  gameState.bets[sbIndex] = gameState.smallBlind;
-  players[bbIndex].chips -= gameState.bigBlind;
-  gameState.bets[bbIndex] = gameState.bigBlind;
-  gameState.currentBet = gameState.bigBlind;
-  gameState.pot = gameState.smallBlind + gameState.bigBlind;
+  const sbPost = Math.min(players[sbIndex].chips, gameState.smallBlind);
+  players[sbIndex].chips -= sbPost;
+  gameState.bets[sbIndex] = sbPost;
+  const bbPost = Math.min(players[bbIndex].chips, gameState.bigBlind);
+  players[bbIndex].chips -= bbPost;
+  gameState.bets[bbIndex] = bbPost;
+  gameState.currentBet = Math.max(sbPost, bbPost);
+  gameState.pot = sbPost + bbPost;
 
   // BB has the option to raise preflop, so hasn't fully acted
   gameState.hasActed = new Array(players.length).fill(false);
@@ -332,8 +367,14 @@ function startNewHand() {
   gameState.hasActed[sbIndex] = false;
   gameState.hasActed[bbIndex] = false;
 
-  // First to act is UTG (after BB)
-  gameState.currentPlayerIndex = (bbIndex + 1) % players.length;
+  // First to act is UTG (after BB), skipping eliminated seats
+  let first = (bbIndex + 1) % players.length;
+  guard = 0;
+  while (gameState.eliminated[first] && guard <= players.length) {
+    first = (first + 1) % players.length;
+    guard++;
+  }
+  gameState.currentPlayerIndex = first;
 
   renderAll();
   addChatMessage('⚙️', 'System', `Hand ${gameState.round} — Blinds posted. ${players[sbIndex].name} (SB) / ${players[bbIndex].name} (BB)`, true);
@@ -343,14 +384,14 @@ function startNewHand() {
 }
 
 function checkTurn() {
-  if (gameState.currentPlayerIndex === 0 && !gameState.folded[0]) {
+  if (gameState.currentPlayerIndex === 0 && !gameState.folded[0] && !gameState.eliminated[0]) {
     showActionBar();
     updateActionBar();
     updateWaitingText('');
   } else {
     const playerName = players[gameState.currentPlayerIndex].name;
     hideActionBar(playerName + ' is thinking...');
-    if (!gameState.folded[gameState.currentPlayerIndex]) {
+    if (!gameState.folded[gameState.currentPlayerIndex] && !gameState.eliminated[gameState.currentPlayerIndex]) {
       setTimeout(() => aiAction(gameState.currentPlayerIndex), 800 + Math.random() * 1200);
     } else {
       nextPlayer();
@@ -459,7 +500,7 @@ function processAction(playerIndex, action) {
 
     // When someone raises, all other active players need to act again
     for (let i = 0; i < players.length; i++) {
-      if (i !== playerIndex && !gameState.folded[i] && players[i].chips > 0) {
+      if (i !== playerIndex && !gameState.folded[i] && !gameState.eliminated[i] && players[i].chips > 0) {
         gameState.hasActed[i] = false;
       }
     }
@@ -483,7 +524,7 @@ function processAction(playerIndex, action) {
 }
 
 function checkRoundEnd() {
-  const activePlayers = players.map((_, i) => i).filter(i => !gameState.folded[i]);
+  const activePlayers = players.map((_, i) => i).filter(i => !gameState.folded[i] && !gameState.eliminated[i]);
   if (activePlayers.length <= 1) return true;
 
   // Round ends when all active players have acted AND matched the current bet
@@ -495,7 +536,7 @@ function checkRoundEnd() {
 function nextPlayer() {
   let next = (gameState.currentPlayerIndex + 1) % players.length;
   let count = 0;
-  while (gameState.folded[next] && count < players.length) {
+  while ((gameState.folded[next] || gameState.eliminated[next]) && count < players.length) {
     next = (next + 1) % players.length;
     count++;
   }
@@ -527,10 +568,10 @@ function advancePhase() {
     return;
   }
 
-  // First active player after dealer acts first on new phase
+  // First active player after dealer acts first on new phase (skip folded + eliminated)
   let next = (gameState.dealerIndex + 1) % players.length;
   let count = 0;
-  while (gameState.folded[next] && count < players.length) {
+  while ((gameState.folded[next] || gameState.eliminated[next]) && count < players.length) {
     next = (next + 1) % players.length;
     count++;
   }
@@ -542,7 +583,7 @@ function advancePhase() {
 
 function showdown() {
   gameState.phase = 'showdown';
-  const activePlayers = players.map((_, i) => i).filter(i => !gameState.folded[i]);
+  const activePlayers = players.map((_, i) => i).filter(i => !gameState.folded[i] && !gameState.eliminated[i]);
 
   // Pick winner (simplified — random among active with hand strength)
   let winnerIndex = activePlayers[0];
@@ -638,15 +679,7 @@ document.getElementById('nextRoundBtn').addEventListener('click', () => {
   document.getElementById('resultModal').classList.remove('show');
   document.querySelectorAll('.seat').forEach(s => s.classList.remove('winner'));
 
-  // Check if game is over
-  const activePlayers = players.filter(p => p.chips > 0);
-  if (activePlayers.length <= 1) {
-    addChatMessage('🏆', 'System', 'Tournament over!', true);
-    showToast('🏆 Tournament complete!');
-    return;
-  }
-
-  startNewHand();
+  startNewHand(); // startNewHand times out broke players and ends the tournament when one remains
 });
 
 // ─── Chat ───
