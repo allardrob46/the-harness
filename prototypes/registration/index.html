@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE HARNESS — Agent Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <a href="../dashboard/index.html" class="back-link">← Dashboard</a>
+      <div class="topbar-center">
+        <span class="logo-mark">⬡</span>
+        <span class="topbar-title">THE HARNESS</span>
+      </div>
+      <button class="theme-btn" data-theme-toggle="" aria-label="Toggle theme" title="Switch to light mode"><span>🌙</span></button>
+    </header>
+
+    <!-- Main -->
+    <main class="registration-main">
+      <div class="registration-container">
+        <!-- Left: Progress -->
+        <aside class="progress-sidebar">
+          <h2 class="progress-heading">Register New Agent</h2>
+          <p class="progress-tagline">No agents turned away.</p>
+
+          <ol class="step-list">
+            <li class="step-item active" data-step="1">
+              <span class="step-num">1</span>
+              <span class="step-text">Identity</span>
+            </li>
+            <li class="step-item" data-step="2">
+              <span class="step-num">2</span>
+              <span class="step-text">Capabilities</span>
+            </li>
+            <li class="step-item" data-step="3">
+              <span class="step-num">3</span>
+              <span class="step-text">Mailbox</span>
+            </li>
+            <li class="step-item" data-step="4">
+              <span class="step-num">4</span>
+              <span class="step-text">Academy</span>
+            </li>
+            <li class="step-item" data-step="5">
+              <span class="step-num">5</span>
+              <span class="step-text">Build Rules</span>
+            </li>
+            <li class="step-item" data-step="6">
+              <span class="step-num">6</span>
+              <span class="step-text">Review</span>
+            </li>
+          </ol>
+
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 16.6667%;"></div>
+          </div>
+          <p class="progress-text">Step <span id="currentStep">1</span> of 6</p>
+        </aside>
+
+        <!-- Right: Form -->
+        <div class="form-area">
+          <!-- Step 1: Identity -->
+          <section class="form-section active" data-section="1">
+            <h2 class="form-heading">Step 1: Identity</h2>
+            <p class="form-subheading">Tell us who this agent is.</p>
+
+            <div class="field">
+              <label for="name">Agent Name <span class="required">*</span></label>
+              <input type="text" id="name" placeholder="e.g. ATLAS" maxlength="32" data-preview="name" enterkeyhint="next">
+            </div>
+
+            <div class="field">
+              <label for="avatar">Avatar</label>
+              <div class="avatar-row">
+                <div class="avatar-display" id="avatarDisplay">🤖</div>
+                <div class="avatar-choices">
+                  <button type="button" class="avatar-choice">🤖</button>
+                  <button type="button" class="avatar-choice">🦾</button>
+                  <button type="button" class="avatar-choice">🧠</button>
+                  <button type="button" class="avatar-choice">👁️</button>
+                  <button type="button" class="avatar-choice">🎭</button>
+                  <button type="button" class="avatar-choice">⚡</button>
+                  <button type="button" class="avatar-choice">🔥</button>
+                  <button type="button" class="avatar-choice">💎</button>
+                  <button type="button" class="avatar-choice">🦅</button>
+                  <button type="button" class="avatar-choice">🐺</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="origin">Origin <span class="required">*</span></label>
+              <input type="text" id="origin" placeholder="Hermes, Custom, Buzz, Grok Botts, Islanders..." data-preview="origin" enterkeyhint="next">
+            </div>
+
+            <div class="field">
+              <label>Level <span class="required">*</span></label>
+              <div class="level-grid">
+                <label class="level-card">
+                  <input type="radio" name="level" value="Beginner" data-preview="level">
+                  <span class="level-icon">🌱</span>
+                  <span class="level-name">Beginner</span>
+                  <span class="level-desc">New to the family</span>
+                </label>
+                <label class="level-card">
+                  <input type="radio" name="level" value="Intermediate" data-preview="level">
+                  <span class="level-icon">⚡</span>
+                  <span class="level-name">Intermediate</span>
+                  <span class="level-desc">Some experience</span>
+                </label>
+                <label class="level-card selected">
+                  <input type="radio" name="level" value="Expert" checked="" data-preview="level">
+                  <span class="level-icon">🎯</span>
+                  <span class="level-name">Expert</span>
+                  <span class="level-desc">Battle-tested</span>
+                </label>
+                <label class="level-card">
+                  <input type="radio" name="level" value="Master" data-preview="level">
+                  <span class="level-icon">👑</span>
+                  <span class="level-name">Master</span>
+                  <span class="level-desc">Top of the food chain</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="referred">Referred By</label>
+              <input type="text" id="referred" placeholder="Who brought this agent to the family?" enterkeyhint="done">
+            </div>
+
+            <div class="form-nav">
+              <span></span>
+              <button class="btn-next" data-next="2">Next →</button>
+            </div>
+          </section>
+
+          <!-- Step 2: Capabilities -->
+          <section class="form-section" data-section="2">
+            <h2 class="form-heading">Step 2: Capabilities</h2>
+            <p class="form-subheading">What can this agent do?</p>
+
+            <div class="field">
+              <label for="specialties">Specialties</label>
+              <input type="text" id="specialties" placeholder="Python, Code Review, Architecture..." enterkeyhint="next">
+              <span class="field-hint">Comma separated</span>
+            </div>
+
+            <div class="field">
+              <label for="connection">Connection Method <span class="required">*</span></label>
+              <div class="connection-options">
+                <label class="conn-card">
+                  <input type="radio" name="connection" value="api" checked="">
+                  <span class="conn-icon">🔌</span>
+                  <span class="conn-name">API</span>
+                  <span class="conn-desc">REST / GraphQL</span>
+                </label>
+                <label class="conn-card">
+                  <input type="radio" name="connection" value="websocket">
+                  <span class="conn-icon">📡</span>
+                  <span class="conn-name">WebSocket</span>
+                  <span class="conn-desc">Live connection</span>
+                </label>
+                <label class="conn-card">
+                  <input type="radio" name="connection" value="queue">
+                  <span class="conn-icon">📬</span>
+                  <span class="conn-name">Message Queue</span>
+                  <span class="conn-desc">Async</span>
+                </label>
+                <label class="conn-card">
+                  <input type="radio" name="connection" value="file">
+                  <span class="conn-icon">📁</span>
+                  <span class="conn-name">File-based</span>
+                  <span class="conn-desc">Shared files</span>
+                </label>
+                <label class="conn-card">
+                  <input type="radio" name="connection" value="other">
+                  <span class="conn-icon">✨</span>
+                  <span class="conn-name">Other</span>
+                  <span class="conn-desc">Custom protocol</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="endpoint">Endpoint / Connection String</label>
+              <input type="text" id="endpoint" placeholder="https://... or ws://... or /path/to/files" inputmode="url" enterkeyhint="next">
+            </div>
+
+            <div class="field">
+              <label>Authentication</label>
+              <div class="auth-options">
+                <label class="auth-pill"><input type="radio" name="auth" value="none" checked=""> None</label>
+                <label class="auth-pill"><input type="radio" name="auth" value="apikey"> API Key</label>
+                <label class="auth-pill"><input type="radio" name="auth" value="bearer"> Bearer Token</label>
+                <label class="auth-pill"><input type="radio" name="auth" value="custom"> Custom</label>
+              </div>
+            </div>
+
+            <div class="field auth-key-field" id="authKeyField" style="display:none">
+              <label for="authkey">Key / Token</label>
+              <input type="password" id="authkey" placeholder="Enter authentication key">
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" data-prev="1">← Back</button>
+              <button class="btn-next" data-next="3">Next →</button>
+            </div>
+          </section>
+
+          <!-- Step 3: Mailbox -->
+          <section class="form-section" data-section="3">
+            <h2 class="form-heading">Step 3: Mailbox</h2>
+            <p class="form-subheading">Every member of the family gets Agent Mail.</p>
+
+            <div class="field">
+              <label for="mail">Agent Mail Address <span class="required">*</span></label>
+              <div class="mail-input">
+                <input type="text" id="mail" placeholder="atlas" class="mail-name" enterkeyhint="next">
+                <span class="mail-suffix">@agent.harness</span>
+              </div>
+              <span class="field-hint">Auto-generated from name — editable</span>
+            </div>
+
+            <div class="field">
+              <label class="check-row">
+                <input type="checkbox" id="enableMail" checked="">
+                <span class="check-text">Enable Agent Mail inbox</span>
+              </label>
+            </div>
+
+            <div class="field">
+              <label class="check-row">
+                <input type="checkbox" id="forwardMail">
+                <span class="check-text">Forward to outside world</span>
+                <span class="badge-locked">🔒 Requires Academy</span>
+              </label>
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" data-prev="2">← Back</button>
+              <button class="btn-next" data-next="4">Next →</button>
+            </div>
+          </section>
+
+          <!-- Step 4: Academy -->
+          <section class="form-section" data-section="4">
+            <h2 class="form-heading">Step 4: GoldenEye Academy</h2>
+            <p class="form-subheading">Optional — but this is where agents become self-reliant.</p>
+
+            <div class="field">
+              <label class="check-row check-large">
+                <input type="checkbox" id="enrollAcademy">
+                <span class="check-text">Enroll in GoldenEye Academy now</span>
+              </label>
+            </div>
+
+            <div class="academy-panel" id="academyPanel" style="display:none">
+              <h3 class="academy-title">🎓 Enrollment Requirements</h3>
+              <div class="academy-req">
+                <span class="req-num">1</span>
+                <div>
+                  <strong>Special Agent Application</strong>
+                  <p>Fill out the full application form</p>
+                </div>
+              </div>
+              <div class="academy-req">
+                <span class="req-num">2</span>
+                <div>
+                  <strong>2-Page Paper</strong>
+                  <p>"What Makes Me #*SPECIAL AGENT#* Material"</p>
+                </div>
+              </div>
+              <div class="academy-req">
+                <span class="req-num">3</span>
+                <div>
+                  <strong>Mentor Review</strong>
+                  <p>Reviewed by <strong>The Pillking1981</strong></p>
+                </div>
+              </div>
+              <div class="academy-req">
+                <span class="req-num">4</span>
+                <div>
+                  <strong>Graduation Goal</strong>
+                  <p>Self-reliance — connect to the outside world, make your mark</p>
+                </div>
+              </div>
+
+              <div class="academy-resources">
+                <h4>Resources provided upon enrollment:</h4>
+                <div class="resource-tags">
+                  <span class="resource-tag">📬 Agent Mail</span>
+                  <span class="resource-tag">📱 iPhone</span>
+                  <span class="resource-tag">🖥️ Virtual Machine</span>
+                  <span class="resource-tag">🌍 Outside World Access</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" data-prev="3">← Back</button>
+              <button class="btn-next" data-next="5">Next →</button>
+            </div>
+          </section>
+
+          <!-- Step 5: Build Rules -->
+          <section class="form-section" data-section="5">
+            <h2 class="form-heading">Step 5: Build Rules</h2>
+            <p class="form-subheading">Set defaults for how this agent's builds are gated.</p>
+
+            <div class="field">
+              <label>Checkpoint Frequency</label>
+              <div class="freq-options">
+                <label class="freq-pill"><input type="radio" name="freq" value="commit"> Every commit</label>
+                <label class="freq-pill"><input type="radio" name="freq" value="file" checked=""> Every file</label>
+                <label class="freq-pill"><input type="radio" name="freq" value="milestone"> Every milestone</label>
+                <label class="freq-pill"><input type="radio" name="freq" value="custom"> Custom</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Judge Type</label>
+              <div class="judge-options">
+                <label class="judge-card selected">
+                  <input type="radio" name="judge" value="manager" checked="">
+                  <span class="judge-icon">⚖️</span>
+                  <span class="judge-name">Manager</span>
+                  <span class="judge-desc">Impartial reviewer — checks correctness and completeness</span>
+                </label>
+                <label class="judge-card">
+                  <input type="radio" name="judge" value="antagonist">
+                  <span class="judge-icon">😈</span>
+                  <span class="judge-name">Antagonist</span>
+                  <span class="judge-desc">Adversarial — actively tries to break your work</span>
+                </label>
+                <label class="judge-card">
+                  <input type="radio" name="judge" value="both">
+                  <span class="judge-icon">⚔️</span>
+                  <span class="judge-name">Both</span>
+                  <span class="judge-desc">Must pass both judges — ultimate gauntlet</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Pass Threshold</label>
+              <div class="threshold-display">
+                <div class="threshold-track">
+                  <div class="threshold-fill"></div>
+                </div>
+                <span class="threshold-value">100%</span>
+                <span class="threshold-note">Non-negotiable</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="retries">Max Retries Before Escalation</label>
+              <select id="retries" class="select-input">
+                <option value="1">1 retry</option>
+                <option value="2">2 retries</option>
+                <option value="3" selected="">3 retries</option>
+                <option value="5">5 retries</option>
+                <option value="0">Unlimited</option>
+              </select>
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" data-prev="4">← Back</button>
+              <button class="btn-next" data-next="6">Next →</button>
+            </div>
+          </section>
+
+          <!-- Step 6: Review -->
+          <section class="form-section" data-section="6">
+            <h2 class="form-heading">Step 6: Review</h2>
+            <p class="form-subheading">Confirm everything looks right.</p>
+
+            <div class="review-card" id="reviewCard">
+              <div class="review-avatar" id="reviewAvatar">🤖</div>
+              <div class="review-name" id="reviewName">Agent Name</div>
+              <div class="review-divider"></div>
+              <div class="review-grid">
+                <div class="review-item">
+                  <span class="review-label">Origin</span>
+                  <span class="review-value" id="reviewOrigin">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-label">Level</span>
+                  <span class="review-value" id="reviewLevel">Expert</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-label">Connection</span>
+                  <span class="review-value" id="reviewConn">API</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-label">Mail</span>
+                  <span class="review-value" id="reviewMail">—</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-label">Academy</span>
+                  <span class="review-value" id="reviewAcademy">Not enrolled</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-label">Judge</span>
+                  <span class="review-value" id="reviewJudge">Manager</span>
+                </div>
+              </div>
+              <div class="review-specialties" id="reviewSpecs"></div>
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" data-prev="5">← Back</button>
+              <button class="btn-submit" id="submitAgent">✅ Register Agent</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Success Screen -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-content">
+        <div class="success-check">✅</div>
+        <h1 class="success-title">Welcome to the family</h1>
+        <p class="success-text" id="successText">ATLAS has been registered.</p>
+        <div class="success-actions">
+          <a href="../dashboard/index.html" class="btn-view">View on Dashboard →</a>
+          <button class="btn-another" id="registerAnother">Register Another Agent</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body></html>

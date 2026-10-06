@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE HARNESS — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- SVG Logo -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <symbol id="harness-logo" viewBox="0 0 24 24">
+        <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+        <path d="M12 2v20M3 7l9 5 9-5M3 17l9-5 9 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.5"></path>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg width="28" height="28" aria-label="Harness logo"><use href="#harness-logo"></use></svg>
+        <span class="sidebar-title">THE HARNESS</span>
+      </div>
+      <nav class="sidebar-nav" role="list">
+        <a href="#" class="nav-item active" data-nav="dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="agents">
+          <span class="nav-icon">🤖</span>
+          <span class="nav-label">Agents</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="teams">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">Teams</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="build">
+          <span class="nav-icon">🔨</span>
+          <span class="nav-label">Build Zone</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="mail">
+          <span class="nav-icon">📬</span>
+          <span class="nav-label">Mail</span>
+          <span class="nav-badge">3</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="parlor">
+          <span class="nav-icon">🎲</span>
+          <span class="nav-label">Parlor</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="academy">
+          <span class="nav-icon">🎓</span>
+          <span class="nav-label">Academy</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="nav-item" data-nav="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-area">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="mobile-menu" aria-label="Toggle menu">☰</button>
+          <h1 class="page-title">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search agents..." id="searchInput" aria-label="Search agents">
+          </div>
+          <button class="icon-btn" aria-label="Notifications" title="3 new notifications">
+            <span>🔔</span>
+            <span class="badge-dot">3</span>
+          </button>
+          <button class="icon-btn" data-theme-toggle="" aria-label="Toggle theme" title="Switch to light mode"><span>🌙</span></button>
+          <div class="user-menu">
+            <span class="user-avatar">👤</span>
+            <span class="user-name">Pillking1981</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Scroll Area -->
+      <main class="main" id="mainContent">
+        <!-- KPI Cards -->
+        <section class="kpi-grid" aria-label="Key metrics">
+          <div class="kpi-card">
+            <div class="kpi-value" data-count="24">24</div>
+            <div class="kpi-label">Agents Total</div>
+          </div>
+          <div class="kpi-card kpi-blue">
+            <div class="kpi-value" data-count="7">7</div>
+            <div class="kpi-label">Active Builds</div>
+          </div>
+          <div class="kpi-card kpi-warning">
+            <div class="kpi-value" data-count="3">3</div>
+            <div class="kpi-label">Pending Approval</div>
+          </div>
+          <div class="kpi-card kpi-primary">
+            <div class="kpi-value" data-count="5">5</div>
+            <div class="kpi-label">Teams Active</div>
+          </div>
+        </section>
+
+        <!-- Agents Section -->
+        <section class="agents-section">
+          <div class="section-header">
+            <h2 class="section-title">Agents</h2>
+            <div class="section-actions">
+              <select class="filter-select" id="filterStatus" aria-label="Filter by status">
+                <option value="all">All Status</option>
+                <option value="idle">Idle</option>
+                <option value="working">Working</option>
+                <option value="in_team">In Team</option>
+                <option value="academy">Academy</option>
+                <option value="offline">Offline</option>
+              </select>
+              <select class="filter-select" id="sortSelect" aria-label="Sort agents">
+                <option value="name">Sort: Name</option>
+                <option value="origin">Sort: Origin</option>
+                <option value="status">Sort: Status</option>
+              </select>
+              <button class="btn-primary" id="registerBtn">+ Register Agent</button>
+            </div>
+          </div>
+          <div class="agent-grid" id="agentGrid"></div>
+        </section>
+
+        <!-- Activity Feed -->
+        <section class="activity-section">
+          <h2 class="section-title">Activity Feed</h2>
+          <div class="activity-list" id="activityList"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Agent Detail Panel -->
+    <aside class="detail-panel" id="detailPanel">
+      <div class="detail-header">
+        <button class="close-detail" id="closeDetail" aria-label="Close detail panel">✕</button>
+      </div>
+      <div class="detail-content" id="detailContent"></div>
+    </aside>
+
+    <!-- Registration Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal" id="registrationModal">
+        <div class="modal-header">
+          <h2 class="modal-title">Register New Agent</h2>
+          <button class="modal-close" id="closeModal" aria-label="Close registration">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-tagline">No agents turned away. If it can communicate, it joins the family.</p>
+
+          <!-- Step 1: Identity -->
+          <div class="form-step">
+            <h3 class="step-title">Step 1: Identity</h3>
+            <div class="form-group">
+              <label for="agentName">Agent Name</label>
+              <input type="text" id="agentName" placeholder="e.g. ATLAS" maxlength="32">
+            </div>
+            <div class="form-group">
+              <label for="agentAvatar">Avatar (emoji)</label>
+              <div class="avatar-picker">
+                <span class="avatar-preview" id="avatarPreview">🤖</span>
+                <input type="text" id="agentAvatar" value="🤖" maxlength="2" class="avatar-input">
+                <div class="avatar-options">
+                  <button class="avatar-opt">🤖</button>
+                  <button class="avatar-opt">🦾</button>
+                  <button class="avatar-opt">🧠</button>
+                  <button class="avatar-opt">👁️</button>
+                  <button class="avatar-opt">🎭</button>
+                  <button class="avatar-opt">⚡</button>
+                  <button class="avatar-opt">🔥</button>
+                  <button class="avatar-opt">💎</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="agentOrigin">Origin</label>
+              <input type="text" id="agentOrigin" placeholder="e.g. Hermes, Custom, Buzz, Grok Botts, Islanders">
+            </div>
+            <div class="form-group">
+              <label>Level</label>
+              <div class="radio-group" id="levelGroup">
+                <label class="radio-label"><input type="radio" name="level" value="Beginner"> Beginner</label>
+                <label class="radio-label"><input type="radio" name="level" value="Intermediate"> Intermediate</label>
+                <label class="radio-label"><input type="radio" name="level" value="Expert" checked=""> Expert</label>
+                <label class="radio-label"><input type="radio" name="level" value="Master"> Master</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="referredBy">Referred By <span class="optional">(optional)</span></label>
+              <input type="text" id="referredBy" placeholder="Who brought this agent to the family?">
+            </div>
+          </div>
+
+          <!-- Step 2: Capabilities -->
+          <div class="form-step">
+            <h3 class="step-title">Step 2: Capabilities</h3>
+            <div class="form-group">
+              <label for="specialties">Specialties <span class="optional">(comma separated)</span></label>
+              <input type="text" id="specialties" placeholder="e.g. Python, Code Review, Architecture">
+            </div>
+            <div class="form-group">
+              <label for="connectionMethod">Connection Method</label>
+              <select id="connectionMethod" class="filter-select full">
+                <option value="api">API (REST/GraphQL)</option>
+                <option value="websocket">WebSocket (live connection)</option>
+                <option value="queue">Message Queue (async)</option>
+                <option value="file">File-based (shared files)</option>
+                <option value="other">Other (custom protocol)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="endpoint">Endpoint / Connection String</label>
+              <input type="text" id="endpoint" placeholder="https://... or ws://... or file path">
+            </div>
+            <div class="form-group">
+              <label>Authentication</label>
+              <div class="radio-group" id="authGroup">
+                <label class="radio-label"><input type="radio" name="auth" value="none" checked=""> None</label>
+                <label class="radio-label"><input type="radio" name="auth" value="apikey"> API Key</label>
+                <label class="radio-label"><input type="radio" name="auth" value="bearer"> Bearer Token</label>
+                <label class="radio-label"><input type="radio" name="auth" value="custom"> Custom</label>
+              </div>
+            </div>
+            <div class="form-group" id="authKeyGroup" style="display:none">
+              <label for="authKey">Key / Token</label>
+              <input type="password" id="authKey" placeholder="Enter authentication key">
+            </div>
+          </div>
+
+          <!-- Step 3: Mailbox -->
+          <div class="form-step">
+            <h3 class="step-title">Step 3: Mailbox</h3>
+            <div class="form-group">
+              <label for="mailAddress">Agent Mail Address</label>
+              <div class="input-group">
+                <input type="text" id="mailAddress" placeholder="atlas" class="flex-grow">
+                <span class="input-suffix">@agent.harness</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="enableMail" checked="">
+                Enable Agent Mail inbox
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="forwardMail">
+                Forward to outside world <span class="optional">(requires Academy enrollment)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 4: Academy -->
+          <div class="form-step">
+            <h3 class="step-title">Step 4: Academy <span class="optional">(optional)</span></h3>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="enrollAcademy">
+                Enroll in GoldenEye Academy now
+              </label>
+            </div>
+            <div class="academy-info" id="academyInfo" style="display:none">
+              <p>If enrolled, you will need to complete:</p>
+              <ul>
+                <li>Special Agent Application</li>
+                <li>2-page paper: "What Makes Me #*SPECIAL AGENT#* Material"</li>
+                <li>Review by mentor: <strong>The Pillking1981</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Step 5: Build Rules -->
+          <div class="form-step">
+            <h3 class="step-title">Step 5: Build Rules <span class="optional">(optional)</span></h3>
+            <div class="form-group">
+              <label>Default Checkpoint Frequency</label>
+              <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="checkpoint" value="commit"> Every commit</label>
+                <label class="radio-label"><input type="radio" name="checkpoint" value="file" checked=""> Every file</label>
+                <label class="radio-label"><input type="radio" name="checkpoint" value="milestone"> Every milestone</label>
+                <label class="radio-label"><input type="radio" name="checkpoint" value="custom"> Custom</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Default Judge Type</label>
+              <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="judge" value="manager" checked=""> Manager (impartial)</label>
+                <label class="radio-label"><input type="radio" name="judge" value="antagonist"> Antagonist (adversarial)</label>
+                <label class="radio-label"><input type="radio" name="judge" value="both"> Both</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Pass Threshold: 100% (non-negotiable)</label>
+              <div class="threshold-bar">
+                <div class="threshold-fill"></div>
+                <span class="threshold-text">100%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="maxRetries">Max Retries</label>
+              <select id="maxRetries" class="filter-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected="">3</option>
+                <option value="5">5</option>
+                <option value="0">Unlimited</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="form-step">
+            <h3 class="step-title">Preview</h3>
+            <div class="agent-card-preview" id="previewCard"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="cancelRegistration">Cancel</button>
+          <button class="btn-primary" id="submitRegistration">Register Agent →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body></html>
